@@ -20,5 +20,11 @@
         "ext-inotify": "*",
         "ext-yar": "*",
         "php": ">=7.0"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
     }
 }

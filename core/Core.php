@@ -60,11 +60,28 @@
         /**
          * Magic Function: Call Static
          *
+         * @param string $name
+         * @param array $args
+         * 
          * @return mixed
          */
         public static function __callStatic($name, $args) {
 
             return call_user_func_array([self::getInstance(), $name], $args);
+
+        }
+
+        /**
+         * Magic Function: Call
+         *
+         * @param string $name
+         * @param array $args
+         * 
+         * @return mixed
+         */
+        public function __call($name, $args) {
+
+            return call_user_func_array([$this, $name], $args);
 
         }
 
@@ -75,7 +92,7 @@
          * 
          * @return self
          */
-        public function addApplication(\Waddle\Application $app) : \Waddle\Application {
+        protected function addApplication(\Waddle\Application $app) : \Waddle\Core {
 
             $this->applications[] = $app;
 
@@ -90,7 +107,7 @@
          * 
          * @return self
          */
-        public function setHandler(string $handlerName) : \Waddle\Core {
+        protected function setHandler(string $handlerName) : \Waddle\Core {
 
             if (!class_exists($handlerName)){
                 throw new \Exception("Undefined Handler: ". $handlerName);
@@ -106,11 +123,15 @@
          *
          * @return void
          */
-        public function run() {
+        protected function run() {
 
             foreach($this->applications as $app){
+                $handler = new $this->handler;
 
+                $handler->handle($app);
             }
+
+            \Waddle\Log::info("Started running......");
 
         }
 

@@ -9,12 +9,10 @@
      * @link     https://github.com/AC-Union/Waddle/
      */
 
-    namespace Waddle\Instance;
+    namespace Waddle\Server;
 
-    require_once "vendor/autoload.php";
+    interface ServerInterface {
 
-    use Waddle\{Core, Application, Log};
+        
 
-    Log::$config["stream"]["info"] = STDOUT;
-
-    Log::info("test");
+    }
