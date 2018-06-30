@@ -63,7 +63,18 @@
          */
         public function handleRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 
-            $h = $this->handler[( substr($request->server["request_uri"], 1) ?: "Default" )];
+            $h = @$this->handler[( substr($request->server["request_uri"], 1) ?: "Default" )];
+            if (!$h) {
+                $response->status(404);
+                $response->end(json_encode([
+                    "error" => [
+                        [
+                            "404 Not Found"
+                        ]
+                    ]
+                ]));
+                return;
+            }
             $header = $request->header;
             $header["variables"] = $request->get;
             $resp = $h($header, $request->rawContent());
