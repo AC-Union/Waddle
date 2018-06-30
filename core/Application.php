@@ -20,4 +20,30 @@
          */
         public $serverType = "\\Waddle\\Server\\HttpServer";
 
+        /**
+         * Register a Middleware
+         *
+         * @param \Waddle\Middleware\MiddlewareInterface $m
+         * @return self
+         */
+        public function registerMiddleware(\Waddle\Middleware\MiddlewareInterface $m) : self {
+
+            \Waddle\Util\Event::add("middleware.before", function (&$header, &$body) use ($m) {
+
+                $a = $m->request($header, $body);
+                $header = $a[0];
+                $body = $a[1];
+
+            });
+
+            \Waddle\Util\Event::add("middleware.after", function (\Waddle\Response $resp) use ($m) {
+
+                $resp = $m->response($resp);
+
+            });
+
+            return $this;
+
+        }
+
     }

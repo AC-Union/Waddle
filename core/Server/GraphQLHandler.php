@@ -33,7 +33,8 @@
             $server->setHandler(
                 function($header, string $body) use ($v, $app) {
                     call_user_func( [$v, "handleRequest"], $header, $body, $app );
-                });
+                }
+            );
             $this->servers[] = $server;
 
         }
@@ -49,14 +50,18 @@
          */
         public function handleRequest($header, string $body, \Waddle\Application $app) : \Waddle\Response {
 
-            \Waddle\Util\Event::emit("middleware.before", $body);
+            \Waddle\Util\Event::emit("middleware.before", $header, $body);
 
             // WIP
             \GraphQL\GraphQL::executeQuery();
 
-            return (new \Waddle\Response(200))
+            $resp = (new \Waddle\Response(200))
                 ->header("content-type", "application/json")
                 ->write($body);
+            
+            \Waddle\Util\Event::emit("middleware.after", $resp);
+
+            return $resp;
 
         }
 
