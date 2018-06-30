@@ -13,13 +13,17 @@
         "psr-4": {
             "Waddle\\": "./core/",
             "App\\": "./app/"
-        }
+        },
+        "files": [
+            "./core/constant.php"
+        ]
     },
     "require": {
         "ext-swoole": "*",
         "ext-inotify": "*",
         "ext-yar": "*",
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "webonyx/graphql-php": "^0.12.2"
     },
     "repositories": {
         "packagist": {

@@ -15,6 +15,8 @@
 
     use Waddle\{Core, Application, Log};
 
-    Log::$config["stream"]["info"] = STDOUT;
+    foreach (glob(__DIR__ . "/app/*/init.php") as $v) {
+        require_once($v);
+    }
 
-    Log::info("test");
+    Core::run();

@@ -22,6 +22,13 @@
          * @param \Waddle\Application $app
          * @return void
          */
-        public static function handle(\Waddle\Application $app);
+        public function handle(\Waddle\Application $app);
+
+        /**
+         * Start server
+         *
+         * @return void
+         */
+        public function start();
 
     }

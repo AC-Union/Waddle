@@ -32,7 +32,21 @@
          * 
          * @var string
          */
-        protected $handler = "\\Waddle\\Server\\Handler";
+        protected $handler = "\\Waddle\\Server\\GraphQLHandler";
+
+        /**
+         * Configure
+         * 
+         * @var array
+         */
+        protected $config = [
+            "listen" => [
+                "http" => [
+                    "address" => "127.0.0.1",
+                    "port" => 21301,
+                ]
+            ]
+        ];
 
         /**
          * Protected Constructor
@@ -126,12 +140,48 @@
         protected function run() {
 
             foreach($this->applications as $app){
-                $handler = new $this->handler;
+                $handler = \Waddle\Util\SharedObject::get($this->handler);
 
                 $handler->handle($app);
             }
 
             \Waddle\Log::info("Started running......");
+
+            $handler->start();
+
+        }
+
+        /**
+         * Load the configure
+         *
+         * @param string $fileName
+         * 
+         * @return self
+         */
+        protected function loadConfig(string $fileName) : \Waddle\Core {
+
+            $this->config = array_merge($this->config, json_decode(file_get_contents($fileName), 1));
+
+            return $this;
+
+        }
+
+        /**
+         * Get the configure
+         *
+         * @param string $key
+         * 
+         * @return mixed
+         */
+        protected function getConfig(string $key) {
+
+            $e = explode(".", $key);
+            $r = $this->config;
+            foreach ($e as $v){
+                $r = $r[$v];
+            }
+
+            return $r;
 
         }
 

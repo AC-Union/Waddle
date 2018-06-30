@@ -1,0 +1,12 @@
+schema {
+    query: Query
+}
+
+type Query {
+    greetings(input: HelloInput!): String!
+}
+
+input HelloInput {
+    firstName: String!
+    lastName: String
+}
