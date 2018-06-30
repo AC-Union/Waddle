@@ -13,9 +13,12 @@
 
     require_once "vendor/autoload.php";
 
-    use Waddle\{Core, Application, Log};
+    use Waddle\{Core, Log};
+
+    Log::info("Waddle Version ". __WADDLE_VERSION__);
 
     foreach (glob(__DIR__ . "/app/*/init.php") as $v) {
+        Log::info("Application Loaded: " . dirname($v));
         require_once($v);
     }
 

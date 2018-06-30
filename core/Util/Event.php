@@ -21,6 +21,13 @@
         protected $events = [];
 
         /**
+         * The Single Instance
+         *
+         * @var self
+         */
+        protected static $instance = null;
+
+        /**
          * Add an event listenser
          *
          * @param string $name
@@ -28,7 +35,7 @@
          * 
          * @return self
          */
-        public function add(string $name, callable $callback) : \Waddle\Util\Event {
+        protected function add(string $name, callable $callback) : \Waddle\Util\Event {
 
             if(!isset($this->events[$name])){
                 $this->events[$name] = [];
@@ -40,13 +47,55 @@
         }
 
         /**
+         * Get Instance
+         *
+         * @return self
+         */
+        public static function getInstance() : self {
+
+            if (!self::$instance){
+                self::$instance = new self;
+            }
+            return self::$instance;
+
+        }
+
+        /**
+         * Magic Function: Call Static
+         *
+         * @param string $name
+         * @param array $args
+         * 
+         * @return mixed
+         */
+        public static function __callStatic($name, $args) {
+
+            return call_user_func_array([self::getInstance(), $name], $args);
+
+        }
+
+        /**
+         * Magic Function: Call
+         *
+         * @param string $name
+         * @param array $args
+         * 
+         * @return mixed
+         */
+        public function __call($name, $args) {
+
+            return call_user_func_array([$this, $name], $args);
+
+        }
+
+        /**
          * Delete an event
          *
          * @param string $name
          * 
          * @return self
          */
-        public function delete(string $name) : \Waddle\Util\Event {
+        protected function delete(string $name) : \Waddle\Util\Event {
 
             unset($this->events[$name]);
 
@@ -62,14 +111,16 @@
          * 
          * @return self
          */
-        public function emit(string $name, ...$args) : \Waddle\Util\Event {
+        protected function emit(string $name, ...$args) : \Waddle\Util\Event {
 
             if(isset($this->events[$name])){
                 foreach ($this->events[$name] as $v) {
                     call_user_func_args($v, $args);
                 }
+                return $this;
             }else{
-                throw new \Waddle\Exception\NotFoundException("Undefined Event: " . $name);
+                //throw new \Waddle\Exception\NotFoundException("Undefined Event: " . $name);
+                return $this;
             }
 
         }

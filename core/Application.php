@@ -46,4 +46,17 @@
 
         }
 
+        /**
+         * On Add...
+         *
+         * @param \Waddle\Core $core
+         * 
+         * @return void
+         */
+        public function onAdd(\Waddle\Core $core) {
+
+            // Nothing now...
+
+        }
+
     }

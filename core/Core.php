@@ -108,6 +108,9 @@
          */
         protected function addApplication(\Waddle\Application $app) : \Waddle\Core {
 
+            // Execute the application's onAdd method.
+            $app->onAdd($this);
+
             $this->applications[] = $app;
 
             return $this;

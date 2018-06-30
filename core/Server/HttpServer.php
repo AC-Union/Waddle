@@ -64,7 +64,9 @@
         public function handleRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 
             $h = $this->handler;
-            $resp = $h($request->header, $request->rawContent());
+            $header = $request->header;
+            $header["variables"] = $request->get;
+            $resp = $h($header, $request->rawContent());
 
             $response->status($resp->exportStatus());
 

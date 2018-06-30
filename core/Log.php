@@ -43,7 +43,7 @@
                 $stream = self::$config["stream"]["default"];
             }
 
-            $msg = "[" . strtoupper($type) . "][" . date("Y-m-d h:i:s", time()) . "]" . $msg . PHP_EOL;
+            $msg = "[" . strtoupper($type) . "][" . date("Y-m-d h:i:s", time()) . "] " . $msg . PHP_EOL;
 
             fwrite($stream, $msg);
 

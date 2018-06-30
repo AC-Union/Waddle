@@ -32,7 +32,23 @@
             $v = $this;
             $server->setHandler(
                 function($header, string $body) use ($v, $app) {
-                    call_user_func( [$v, "handleRequest"], $header, $body, $app );
+                    $variables = $header["variables"] ? $header["variables"] : [];
+                    $rslt = [];
+                    @parse_str($body, $rslt);
+                    if(isset($rslt["query"])){
+                        $variables = $rslt["variables"] ?: [];
+                        $variables = \json_decode($variables, 1) ?: [];
+                        $query = $rslt["query"];
+                    }else{
+                        $rslt = @json_decode($body, 1);
+                        if(isset($rslt["query"])){
+                            $variables = $rslt["variables"] ?: [];
+                            $query = $rslt["query"];
+                        }else{
+                            $query = $body;
+                        }
+                    }
+                    return call_user_func( [$v, "handleRequest"], $header, $variables, $query, $app );
                 }
             );
             $this->servers[] = $server;
@@ -43,21 +59,30 @@
          * Handle a request
          *
          * @param array $header
+         * @param array $variables
          * @param string $body
          * @param \Waddle\Application $app
          * 
          * @return \Waddle\Response
          */
-        public function handleRequest($header, string $body, \Waddle\Application $app) : \Waddle\Response {
+        public function handleRequest($header, array $variables, string $body, \Waddle\Application $app) : \Waddle\Response {
 
             \Waddle\Util\Event::emit("middleware.before", $header, $body);
-
+            var_dump($variables);
             // WIP
-            \GraphQL\GraphQL::executeQuery();
+            $result = \GraphQL\GraphQL::executeQuery(
+                $app->getSchema(),
+                $body,
+                null,
+                null,
+                $variables,
+                null,
+                $app->getFieldResolver()
+            );
 
             $resp = (new \Waddle\Response(200))
                 ->header("content-type", "application/json")
-                ->write($body);
+                ->write(json_encode($result->toArray()));
             
             \Waddle\Util\Event::emit("middleware.after", $resp);
 
