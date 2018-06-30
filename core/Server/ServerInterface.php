@@ -14,7 +14,7 @@
     interface ServerInterface {
 
         public function start();
-        public function setHandler(Callable $handler);
+        public function setHandler(string $base, Callable $handler);
         public function getServer();
 
     }

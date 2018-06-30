@@ -24,9 +24,9 @@
         /**
          * Current handler
          *
-         * @var Callable
+         * @var Callable[]
          */
-        protected $handler;
+        protected $handler = [];
 
         /**
          * Constructor
@@ -63,7 +63,7 @@
          */
         public function handleRequest(\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
 
-            $h = $this->handler;
+            $h = $this->handler[( substr($request->server["request_uri"], 1) ?: "Default" )];
             $header = $request->header;
             $header["variables"] = $request->get;
             $resp = $h($header, $request->rawContent());
@@ -83,13 +83,14 @@
         /**
          * Set the Handler
          *
+         * @param string $base
          * @param Callable $handler
          * 
          * @return void
          */
-        public function setHandler(Callable $handler) {
+        public function setHandler(string $base, Callable $handler) {
 
-            $this->handler = $handler;
+            $this->handler[$base] = $handler;
 
         }
 

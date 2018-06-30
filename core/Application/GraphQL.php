@@ -105,8 +105,22 @@
 
         }
 
+        /**
+         * Get the Schema
+         *
+         * @return \GraphQL\Type\Schema
+         */
         public function getSchema() : \GraphQL\Type\Schema {
             return $this->schema;
+        }
+
+        /**
+         * Get the name
+         *
+         * @return string
+         */
+        public function getName() : string {
+            return $this->name;
         }
 
         /**

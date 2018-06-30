@@ -30,7 +30,7 @@
 
             $server = \Waddle\Util\SharedObject::get($app->serverType);
             $v = $this;
-            $server->setHandler(
+            $server->setHandler( $app->getName(),
                 function($header, string $body) use ($v, $app) {
                     $variables = $header["variables"] ? $header["variables"] : [];
                     $rslt = [];
