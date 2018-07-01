@@ -25,7 +25,9 @@
     $p->start();
 
     $watcher->run(function($event) use($p) {
+        \Waddle\Log::info("Event: inotify, killing worker process...");
         $p->kill($p->pid);
         $p->wait();
+        \Waddle\Log::info("Starting worker process...");
         $p->start();
     });

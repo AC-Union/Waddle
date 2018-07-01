@@ -4,5 +4,15 @@
             "address": "127.0.0.1",
             "port": 21301
         }
+    },
+    "rpc": {
+        "servers": {
+            "RegisterServer": [
+                "http://rs01.acun.srv:23241",
+                "http://rs02.acun.srv:23242",
+                "http://rs.bjserver.acun.online:23241",
+                "http://localdev.acun.srv:23134"
+            ]
+        }
     }
 }
