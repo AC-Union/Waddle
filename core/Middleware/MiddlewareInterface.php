@@ -23,6 +23,13 @@
          */
         public function request($header, string $body) : array;
 
+        /**
+         * Response Event Handler
+         *
+         * @param \Waddle\Response $response
+         * 
+         * @return \Waddle\Response
+         */
         public function response(\Waddle\Response $response) : \Waddle\Response;
 
     }

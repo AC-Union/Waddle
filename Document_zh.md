@@ -49,3 +49,91 @@ Waddle 是一个轻量级框架。
     \Waddle\Core::addApplication($app);
 
 ```
+
+### Types 的说明
+
+#### GraphQL 文件写法
+
+可以参考 GraphQL 官方文档。scheme 只要出现一次即可。
+
+#### Controller 写法
+
+直接一个类即可。要求参数列表、返回值类型、函数名与 type 内定义的一致。
+
+如果为常量，可以直接添加类属性。
+
+## 热更新
+
+执行
+
+```bash
+php ./waddleWatcher.php
+```
+
+即可。
+
+## Middleware 写法
+
+Middleware 需要实现 `\Waddle\Middleware\MiddlewareInterface` 接口。
+
+两个方法， `request` 和 `response`。
+
+```php
+        /**
+         * Request Event Handler
+         *
+         * @param array $header
+         * @param string $body
+         *
+         * @return array
+         */
+        // 返回值为 修改过的 [$header, $body]。
+        public function request($header, string $body) : array;
+
+        /**
+         * Response Event Handler
+         *
+         * @param \Waddle\Response $response
+         *
+         * @return \Waddle\Response
+         */
+        public function response(\Waddle\Response $response) : \Waddle\Response;
+```
+
+## 配置文件
+
+在 `app/configure.json` 下，json 格式。
+
+获取配置通过
+
+```php
+// $configureKey 是 配置的建，例如 {"a":{"b":{"c":123}}} 要获取 123 ，键就是 "a.b.c"。
+\Waddle\Core::getConfig($configureKey);
+```
+
+## 访问方式
+
+启动服务：
+
+```bash
+php ./waddle.php
+```
+
+端口和地址在配置文件定义。
+
+访问 `http://ipaddr:port/应用名` 即可访问到应用。
+若直接访问 `http://ipaddr:port/` ，默认使用 `Default` 应用。
+
+支持 3 种请求方式：
+
+1. POST Body 放一个 JSON 字符串，两个字段，query 和 variables ，分别是 GraphQL 请求 和 变量列表。
+2. POST form-data query 和 variables 两个字段。
+3. POST Body 放 GraphQL 请求，GET 参数放变量列表（variables）。
+
+## RpcClient
+
+对异步调用的封装。
+
+## 其他
+
+参考注释。
