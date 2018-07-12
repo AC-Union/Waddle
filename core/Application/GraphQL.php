@@ -134,12 +134,18 @@
 
             return function($source, $args, $context, \GraphQL\Type\Definition\ResolveInfo $info) use ($s) {
 
-                // Source is an array of controllers.
-
                 $fieldName = $info->fieldName;
                 $parentType = $info->parentType;
 
                 $typeName = $parentType->name;
+
+                if ($source != null) {
+
+                    if (is_array($source) && !is_callable($source)) return $source[$fieldName];
+                    else if (isset($source->{$fieldName})) return $source->{$fieldName};
+                    else if (method_exists($source, $fieldName)) return $source->{$fieldName}();
+
+                }
 
                 $controller = $s[$typeName];
 

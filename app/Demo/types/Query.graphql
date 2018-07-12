@@ -1,10 +1,33 @@
 schema {
-    query: Query
+    query: Query,
+    mutation: Greetings
 }
 
 type Query {
     greetings(
         firstName: String!
         lastName: String!
-    ): String!
+    ): Greetings!
+    Test(
+        id: Int!
+    ): TestResult!
+    TestDynamic: TestModel!
+}
+
+type TestResult {
+    rand: Int!
+    id: Int!
+}
+
+type TestModel {
+    status: String!
+    result: TestModelRslt!
+}
+
+type TestModelRslt {
+    rand: Int!
+}
+
+type Greetings {
+    Message: String!
 }

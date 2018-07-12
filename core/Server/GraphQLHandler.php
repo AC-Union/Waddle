@@ -68,8 +68,7 @@
         public function handleRequest($header, array $variables, string $body, \Waddle\Application $app) : \Waddle\Response {
 
             \Waddle\Util\Event::emit("middleware.before", $header, $body);
-            var_dump($variables);
-            // WIP
+            
             $result = \GraphQL\GraphQL::executeQuery(
                 $app->getSchema(),
                 $body,
@@ -82,7 +81,7 @@
 
             $resp = (new \Waddle\Response(200))
                 ->header("content-type", "application/json")
-                ->write(json_encode($result->toArray()));
+                ->write(json_encode($result->toArray(\GraphQL\Error\Debug::INCLUDE_DEBUG_MESSAGE | \GraphQL\Error\Debug::INCLUDE_TRACE | \GraphQL\Error\Debug::RETHROW_INTERNAL_EXCEPTIONS)));
             
             \Waddle\Util\Event::emit("middleware.after", $resp);
 
