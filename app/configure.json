@@ -1,4 +1,5 @@
 {
+    "debug": true,
     "listen": {
         "http": {
             "address": "127.0.0.1",

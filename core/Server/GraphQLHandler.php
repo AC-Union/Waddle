@@ -43,6 +43,7 @@
                         $rslt = @json_decode($body, 1);
                         if(isset($rslt["query"])){
                             $variables = $rslt["variables"] ?: [];
+                            var_dump($variables);
                             $query = $rslt["query"];
                         }else{
                             $query = $body;
@@ -79,10 +80,23 @@
                 $app->getFieldResolver()
             );
 
-            $resp = (new \Waddle\Response(200))
-                ->header("content-type", "application/json")
-                ->write(json_encode($result->toArray(\GraphQL\Error\Debug::INCLUDE_DEBUG_MESSAGE | \GraphQL\Error\Debug::INCLUDE_TRACE | \GraphQL\Error\Debug::RETHROW_INTERNAL_EXCEPTIONS)));
-            
+            $args = null;
+
+            if (\Waddle\Core::getConfig("debug")) {
+                $args = \GraphQL\Error\Debug::INCLUDE_DEBUG_MESSAGE | 
+                        \GraphQL\Error\Debug::INCLUDE_TRACE | 
+                        \GraphQL\Error\Debug::RETHROW_INTERNAL_EXCEPTIONS;
+            }
+
+            try {
+                $resp = (new \Waddle\Response(200))
+                    ->header("content-type", "application/json")
+                    ->write(json_encode($result->toArray($args)));
+            } catch(\Exception $e) {
+                \Waddle\Log::error($e->getMessage());
+                if (\Waddle\Core::getConfig("debug"))
+                    throw $e;
+            }
             \Waddle\Util\Event::emit("middleware.after", $resp);
 
             return $resp;

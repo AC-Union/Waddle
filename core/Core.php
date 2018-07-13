@@ -40,11 +40,15 @@
          * @var array
          */
         protected $config = [
+            "debug" => true,
             "listen" => [
                 "http" => [
                     "address" => "127.0.0.1",
                     "port" => 21301,
                 ]
+            ],
+            "rpc" => [
+                "servers" => []
             ]
         ];
 
