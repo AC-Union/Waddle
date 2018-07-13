@@ -16,6 +16,7 @@
     use Waddle\{Core, Log};
 
     Log::info("Waddle Version ". __WADDLE_VERSION__);
+    Core::loadConfig(__DIR__ . "/app/configure.json");
 
     foreach (glob(__DIR__ . "/app/*/init.php") as $v) {
         Log::info("Application Loaded: " . dirname($v));
